@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "949910384505",
+    "project_id": "scmc-chruch-project",
+    "storage_bucket": "scmc-chruch-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:949910384505:android:ba6d1973d127cb720249a8",
+        "android_client_info": {
+          "package_name": "com.church.scmc.scmc_church_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6_Zg7HUQwQgraBTlQ3inKyBYiSaPQMNY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
