@@ -2,8 +2,10 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scmc_church_project/data/network/firebase_firestore.dart';
+import 'package:scmc_church_project/data/remote/remote_bible_json_data.dart';
 import 'package:scmc_church_project/data/remote/remote_firestore_data.dart';
 import 'package:scmc_church_project/data/remote/remote_firestore_data_impl.dart';
+import 'package:scmc_church_project/data/remote/remote_bible_json_data_impl.dart';
 
 import 'configurations.config.dart' as config;
 
@@ -31,5 +33,10 @@ Future<void> $initGetIt(
   gh.factory<RemoteFirestoreData>(
       () => RemoteFirestoreDataImpl(getIt<FirebaseFirestore>()));
 
+  /// 'assets/bible_ko.json' 파일을 읽어오는 원격 데이터 소스 등록
+  gh.factory<RemoteBibleJsonData>(() => RemoteBibleJsonDataImpl());
+
   config.$initGetIt(getIt);
 }
+
+/// flutter pub run build_runner build - delete-conflicting-outputs
