@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scmc_church_project/bloc/bible_bloc/bible_event.dart';
-import 'package:scmc_church_project/bloc/bible_bloc/bible_state.dart';
+import 'package:scmc_church_project/ui/bible/bloc/bible_event.dart';
+import 'package:scmc_church_project/ui/bible/bloc/bible_state.dart';
 
 class BibleBloc extends Bloc<BibleEvent, BibleState> {
   BibleBloc() : super(BibleState(page: BiblePage.bibleCategory)) {

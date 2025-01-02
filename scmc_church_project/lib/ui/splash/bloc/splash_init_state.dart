@@ -1,3 +1,5 @@
+import 'package:scmc_church_project/domain/models/version_data.dart';
+
 /// 초기 앱 진입 통신 상태
 enum SplashInitStatus {
   initial,
@@ -8,7 +10,7 @@ enum SplashInitStatus {
 
 class SplashInitState {
   final SplashInitStatus status;
-  final String? strData;
+  final VersionData? versionData;
 
-  SplashInitState(this.status, this.strData);
+  SplashInitState(this.status, this.versionData);
 }

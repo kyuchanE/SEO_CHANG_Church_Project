@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scmc_church_project/bloc/splash_init/splash_init_bloc.dart';
-import 'package:scmc_church_project/bloc/splash_init/splash_init_event.dart';
-import 'package:scmc_church_project/bloc/splash_init/splash_init_state.dart';
+import 'package:scmc_church_project/ui/splash/bloc/splash_init_bloc.dart';
+import 'package:scmc_church_project/ui/splash/bloc/splash_init_event.dart';
+import 'package:scmc_church_project/ui/splash/bloc/splash_init_state.dart';
 import 'package:scmc_church_project/ui/splash/widget/default_splash_body_widget.dart';
 import 'package:scmc_church_project/ui/splash/widget/error_splash_body_widget.dart';
 

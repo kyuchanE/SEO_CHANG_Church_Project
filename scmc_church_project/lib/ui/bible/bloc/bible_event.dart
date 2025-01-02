@@ -1,4 +1,4 @@
-import 'package:scmc_church_project/bloc/bible_bloc/bible_state.dart';
+import 'package:scmc_church_project/ui/bible/bloc/bible_state.dart';
 
 abstract class BibleEvent {}
 

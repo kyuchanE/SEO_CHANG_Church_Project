@@ -1,4 +1,4 @@
-import 'package:scmc_church_project/bloc/main_navigation/main_navigation_state.dart';
+import 'package:scmc_church_project/ui/main/bloc/main_navigation_state.dart';
 
 abstract class MainNavigationEvent {}
 
