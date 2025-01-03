@@ -1,1 +1,31 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"scmc-chruch-project","appId":"1:949910384505:android:ba6d1973d127cb720249a8","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"scmc-chruch-project","appId":"1:949910384505:ios:c0c3598ca7de8a430249a8","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"scmc-chruch-project","configurations":{"android":"1:949910384505:android:ba6d1973d127cb720249a8","ios":"1:949910384505:ios:c0c3598ca7de8a430249a8","web":"1:949910384505:web:da23dffd5def04250249a8"}}}}}}
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "scmc-chruch-project",
+                    "appId": "1:::",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "scmc-chruch-project",
+                    "appId": "1::ios:",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "scmc-chruch-project",
+                    "configurations": {
+                        "android": "1:::",
+                        "ios": "1::ios:",
+                        "web": "1::web:"
+                    }
+                }
+            }
+        }
+    }
+}

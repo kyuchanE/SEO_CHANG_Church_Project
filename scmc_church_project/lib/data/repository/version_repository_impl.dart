@@ -5,7 +5,6 @@ import 'package:scmc_church_project/domain/models/version_data.dart';
 import 'package:scmc_church_project/domain/repository/version_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:scmc_church_project/data/remote/remote_firestore_data.dart';
-import 'dart:convert';
 
 @LazySingleton(as: VersionRepository)
 class VersionRepositoryImpl implements VersionRepository {

@@ -24,9 +24,9 @@ class BibleChapterRepositoryImpl implements BibleChapterRepository {
       for (var element in bibleChapterResponse) {
         resultBibleChapter.add(element.toDomain());
       }
-      return resultBibleChapter;
+      return Right(resultBibleChapter);
     } catch (e) {
-      return [];
+      return Left(e.toString());
     }
   }
 }

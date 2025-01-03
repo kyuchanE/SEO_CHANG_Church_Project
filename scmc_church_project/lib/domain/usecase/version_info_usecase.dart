@@ -11,7 +11,7 @@ class VersionInfoUsecase implements BaseUseCase<void, VersionData?> {
   VersionInfoUsecase(this._versionRepository);
 
   @override
-  Future<Either<String, VersionData?>> execute(void input) async {
+  Future<Either<String, VersionData?>> execute(_) async {
     return await _versionRepository.getVersion();
   }
 }

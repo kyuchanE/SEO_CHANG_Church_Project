@@ -36,16 +36,13 @@ class MyApp extends StatelessWidget {
         ),
         home: BlocBuilder<SplashInitBloc, SplashInitState>(
           builder: (context, state) {
-            // if (state.status == SplashInitStatus.success) {
-            //   /// init data success
-            //   return MainScreen();
-            // } else {
-            //   /// init data loading or error
-            //   return SplashScreen();
-            // }
-
-            /// TEST ENTER MAIN
-            return MainScreen();
+            if (state.status == SplashInitStatus.success) {
+              /// init data success
+              return MainScreen();
+            } else {
+              /// init data loading or error
+              return SplashScreen();
+            }
           },
         ),
       ),

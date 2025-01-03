@@ -21,3 +21,5 @@ class ChangeBibleCategoryEvent extends BibleEvent {
 
   ChangeBibleCategoryEvent(this.category);
 }
+
+class InitFetchBibleDataEvent extends BibleEvent {}

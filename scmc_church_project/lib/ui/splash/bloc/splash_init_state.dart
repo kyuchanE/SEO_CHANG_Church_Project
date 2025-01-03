@@ -11,6 +11,11 @@ enum SplashInitStatus {
 class SplashInitState {
   final SplashInitStatus status;
   final VersionData? versionData;
+  final String? errorMessage;
 
-  SplashInitState(this.status, this.versionData);
+  SplashInitState(
+    this.status, {
+    this.versionData,
+    this.errorMessage,
+  });
 }
