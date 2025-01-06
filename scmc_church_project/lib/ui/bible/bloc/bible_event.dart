@@ -4,22 +4,23 @@ abstract class BibleEvent {}
 
 class ChangeBiblePageEvent extends BibleEvent {
   BiblePage page = BiblePage.bibleCategory;
-  String category = '';
+  String abbrev = '';
   int chapter = 1;
   int verse = 1;
 
   ChangeBiblePageEvent(
     this.page,
-    this.category,
+    this.abbrev,
     this.chapter,
     this.verse,
   );
 }
 
-class ChangeBibleCategoryEvent extends BibleEvent {
-  String category = '';
+class ChangeBibleAbbrevEvent extends BibleEvent {
+  final BiblePage page;
+  final String abbrev;
 
-  ChangeBibleCategoryEvent(this.category);
+  ChangeBibleAbbrevEvent(this.page, this.abbrev);
 }
 
 class InitFetchBibleDataEvent extends BibleEvent {}

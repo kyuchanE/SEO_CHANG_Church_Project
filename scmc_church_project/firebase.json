@@ -4,14 +4,14 @@
             "android": {
                 "default": {
                     "projectId": "scmc-chruch-project",
-                    "appId": "1:::",
+                    "appId": ":::",
                     "fileOutput": "android/app/google-services.json"
                 }
             },
             "ios": {
                 "default": {
                     "projectId": "scmc-chruch-project",
-                    "appId": "1::ios:",
+                    "appId": ":::",
                     "uploadDebugSymbols": false,
                     "fileOutput": "ios/Runner/GoogleService-Info.plist"
                 }
@@ -20,9 +20,9 @@
                 "lib/firebase_options.dart": {
                     "projectId": "scmc-chruch-project",
                     "configurations": {
-                        "android": "1:::",
-                        "ios": "1::ios:",
-                        "web": "1::web:"
+                        "android": ":::",
+                        "ios": ":::",
+                        "web": ":::"
                     }
                 }
             }

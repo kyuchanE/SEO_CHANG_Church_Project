@@ -10,6 +10,7 @@ extension BibleChapterResponseTransform on BibleChapterResponse {
       abbreviation: abbreviation,
       name: name,
       chapters: chapters,
+      isOldTestament: isOldTestament,
     );
   }
 }

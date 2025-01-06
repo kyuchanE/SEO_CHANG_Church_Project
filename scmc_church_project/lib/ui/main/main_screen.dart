@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scmc_church_project/ui/bible/bible_screen.dart';
+import 'package:scmc_church_project/ui/bible/page/select_bible_category_screen.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -22,8 +22,8 @@ class _MainScreenState extends State<MainScreen> {
         height: 75,
         child: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => BibleScreen()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => SelectBibleCategoryScreen()));
           },
           child: Icon(Icons.book),
           shape: CircleBorder(),
