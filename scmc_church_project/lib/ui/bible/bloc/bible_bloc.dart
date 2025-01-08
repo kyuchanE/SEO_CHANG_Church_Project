@@ -13,11 +13,17 @@ class BibleBloc extends Bloc<BibleEvent, BibleState> {
   BibleBloc(
     this._bibleInfoUsecase,
   ) : super(BibleState(page: BiblePage.bibleCategory)) {
-    on<ChangeBiblePageEvent>(
-        (event, emit) => _changeBiblePage(event, emit, state.copyWith()));
+    on<ChangeBiblePageEvent>((event, emit) async {
+      await _changeBiblePage(event, emit, state.copyWith());
+    });
 
-    on<ChangeBibleAbbrevEvent>((event, emit) =>
-        _changeBibleAbbrevEvent(event, emit, state.copyWith()));
+    on<ChangeBibleAbbrevEvent>((event, emit) async {
+      await _changeBibleAbbrevEvent(event, emit, state.copyWith());
+    });
+
+    on<ChangeBibleVerseEvent>((event, emit) async {
+      await _changeBibleVerseEvent(event, emit, state.copyWith());
+    });
 
     on<InitFetchBibleDataEvent>((event, emit) async {
       emit(BibleState(status: BibleStatus.loading));
@@ -51,13 +57,46 @@ class BibleBloc extends Bloc<BibleEvent, BibleState> {
   ) async {
     emit(BibleState(
       status: state.status,
-      page: event.page,
+      page: state.page,
       abbrev: event.abbrev,
+      verse: state.verse,
       newTestamentList: state.newTestamentList,
       oldTestamentList: state.oldTestamentList,
       allTestamentList: state.allTestamentList,
     ));
   }
+
+  /// 성경 구절 변경
+  Future _changeBibleVerseEvent(
+    ChangeBibleVerseEvent event,
+    Emitter<BibleState> emit,
+    BibleState state,
+  ) async {
+    emit(BibleState(
+      status: state.status,
+      page: state.page,
+      abbrev: state.abbrev,
+      chapter: state.chapter,
+      verse: event.verse,
+      newTestamentList: state.newTestamentList,
+      oldTestamentList: state.oldTestamentList,
+      allTestamentList: state.allTestamentList,
+    ));
+  }
+
+  /// 이전 성경 구절 조회
+  Future _previousBibleVerseEvent(
+    PreviousBibleVerseEvent event,
+    Emitter<BibleState> emit,
+    BibleState state,
+  ) async {}
+
+  /// 다음 성경 구절 조회
+  Future _nextBibleVerseEvent(
+    NextBibleVerseEvent event,
+    Emitter<BibleState> emit,
+    BibleState state,
+  ) async {}
 
   /// 초기 성경 데이터 조회
   Future<void> _initFetchBibleData(

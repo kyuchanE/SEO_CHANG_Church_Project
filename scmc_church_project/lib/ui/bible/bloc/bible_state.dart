@@ -19,7 +19,7 @@ class BibleState {
   final BiblePage page;
   final String? abbrev;
   final int? chapter;
-  final int? verse;
+  final String? verse;
   final List<BibleChapterData>? newTestamentList;
   final List<BibleChapterData>? oldTestamentList;
   final List<BibleChapterData>? allTestamentList;
@@ -42,7 +42,7 @@ class BibleState {
     BiblePage? page,
     String? abbrev,
     int? chapter,
-    int? verse,
+    String? verse,
     List<BibleChapterData>? newTestamentList,
     List<BibleChapterData>? oldTestamentList,
     List<BibleChapterData>? allTestamentList,

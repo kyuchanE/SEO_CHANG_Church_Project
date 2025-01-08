@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:scmc_church_project/ui/bible/page/select_bible_category_screen.dart';
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }

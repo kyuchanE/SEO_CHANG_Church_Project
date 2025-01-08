@@ -7,6 +7,8 @@ import 'package:scmc_church_project/ui/splash/widget/default_splash_body_widget.
 import 'package:scmc_church_project/ui/splash/widget/error_splash_body_widget.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }

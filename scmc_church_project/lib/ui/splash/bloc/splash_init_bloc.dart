@@ -13,7 +13,7 @@ class SplashInitBloc extends Bloc<SplashInitEvent, SplashInitState> {
   SplashInitBloc(
     this._versionInfoUsecase,
   ) : super(SplashInitState(SplashInitStatus.initial)) {
-    /// 초기 성경 데이터 조회 -> 초기 버전 및 데이터 조회
+    /// 초기 버전 및 데이터 조회
     on<InitFetchDataEvent>((event, emit) async {
       emit(SplashInitState(SplashInitStatus.loading));
       await _initFetchData(emit);
