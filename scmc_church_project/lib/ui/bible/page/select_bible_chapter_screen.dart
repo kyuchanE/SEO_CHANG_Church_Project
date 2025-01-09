@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scmc_church_project/core/resources/config.dart';
@@ -69,16 +71,21 @@ class _SelectBibleChapterScreenState extends State<SelectBibleChapterScreen> {
       /// 선택 관련 에러 메시지
     } else {
       /// Result Screen
+      final bibleVerseEventCompleter = Completer<void>();
       context.read<BibleBloc>().add(
             ChangeBibleVerseEvent(
-                "$selectedLeftIndex:${selectedRightIndex ?? "0"}"),
+              "$selectedLeftIndex:${selectedRightIndex ?? "0"}",
+              bibleVerseEventCompleter,
+            ),
           );
-
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => BibleResultScreen(),
-        ),
-      );
+      await bibleVerseEventCompleter.future;
+      if (mounted) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const BibleResultScreen(),
+          ),
+        );
+      }
     }
   }
 

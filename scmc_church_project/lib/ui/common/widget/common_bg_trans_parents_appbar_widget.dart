@@ -11,13 +11,32 @@ Widget bgTransParentsAppbar({
     right: 15.0,
     bottom: 60.0,
   ),
+  String title = "",
 }) {
   return Padding(
     padding: padding,
     child: SizedBox(
       width: double.infinity, // match_parent
-      child: Column(
+      child: Stack(
+        alignment: Alignment.centerRight,
         children: [
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 90,
+                right: 90,
+              ),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
           Row(
             children: [
               IconButton(

@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:scmc_church_project/ui/bible/bloc/bible_state.dart';
 
 abstract class BibleEvent {}
 
+// TODO: 이벤트 사용하나? 제거할까?
 class ChangeBiblePageEvent extends BibleEvent {
   BiblePage page = BiblePage.bibleCategory;
   final String abbrev;
@@ -16,20 +19,35 @@ class ChangeBiblePageEvent extends BibleEvent {
   );
 }
 
+/// 성경 구약/신약 선택 이벤트
 class ChangeBibleAbbrevEvent extends BibleEvent {
   final String abbrev;
+  final Completer<void> completer;
 
-  ChangeBibleAbbrevEvent(this.abbrev);
+  ChangeBibleAbbrevEvent(this.abbrev, this.completer);
 }
 
+/// 성경 구절 선택 이벤트 (장:절)
 class ChangeBibleVerseEvent extends BibleEvent {
-  final String verse;
+  final String verse; // 장:절 ex) 1:1
+  final Completer<void> completer;
 
-  ChangeBibleVerseEvent(this.verse);
+  ChangeBibleVerseEvent(this.verse, this.completer);
 }
 
-class PreviousBibleVerseEvent extends BibleEvent {}
+/// 성경 결과 페이지 하단 이전 버튼 이벤트
+class PreviousBiblePageEvent extends BibleEvent {
+  final Completer<void> completer;
 
-class NextBibleVerseEvent extends BibleEvent {}
+  PreviousBiblePageEvent(this.completer);
+}
 
+/// 성경 겨로가 페이지 하단 다음 버튼 이벤트
+class NextBiblePageEvent extends BibleEvent {
+  final Completer<void> completer;
+
+  NextBiblePageEvent(this.completer);
+}
+
+/// 성경 json 데이터 조회 이벤트
 class InitFetchBibleDataEvent extends BibleEvent {}

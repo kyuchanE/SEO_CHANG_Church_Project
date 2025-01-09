@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scmc_church_project/core/resources/config.dart';
 import 'package:scmc_church_project/domain/models/bible_chapter_data.dart';
 import 'package:scmc_church_project/ui/bible/bloc/bible_bloc.dart';
+import 'package:scmc_church_project/ui/bible/bloc/bible_event.dart';
 import 'package:scmc_church_project/ui/bible/bloc/bible_state.dart';
 import 'package:scmc_church_project/ui/common/widget/common_bg_trans_parents_appbar_widget.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:turn_page_transition/turn_page_transition.dart';
 
 typedef OnTapBiblePageNavigatorCallback = void Function(
@@ -27,18 +31,30 @@ class _BibleResultScreenState extends State<BibleResultScreen> {
   int categoryIndex = 0; // 구약/신약 Index
   int chapterIndex = 0; // 성경 장 Index
   int verseIndex = 0; // 성경 절 Index
+  int lastStayVerseIndex = 0; // 마지막 머무른 성경 절 Index
   String bgAssets = bibleDefaultImg; // 배경 이미지 Assets
   double bibleVerseFontSize = 30.0; // 성경 구절 폰트 사이즈
+  late bool isFirstBiblePage; // 성경 페이지 처음 여부
+  late bool isLastBiblePage; // 성경 페이지 마지막 여부
+
+  ItemScrollController? _itemScrollController;
+  ScrollOffsetController? _scrollOffsetController;
+  ItemPositionsListener? _itemPositionsListener;
+  ScrollOffsetListener? _scrollOffsetListener;
 
   @override
   void initState() {
     super.initState();
+
     BibleState bibleState = context.read<BibleBloc>().state;
+    isFirstBiblePage = bibleState.isFirstBiblePage;
+    isLastBiblePage = bibleState.isLastBiblePage;
     bibleItemList = bibleState.allTestamentList;
     if (bibleItemList != null) {
       for (int i = 0; i < bibleItemList!.length; i++) {
         if ((bibleState.abbrev ?? "") == bibleItemList![i].abbreviation) {
           categoryIndex = i;
+          break;
         }
       }
 
@@ -49,27 +65,71 @@ class _BibleResultScreenState extends State<BibleResultScreen> {
       } catch (e) {}
 
       bgAssets = bibleItemList![categoryIndex].bgAssets;
+
+      _initScrollController();
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  /// scrollable_positioned_list 초기화
+  void _initScrollController() {
+    _itemScrollController = ItemScrollController();
+    _scrollOffsetController = ScrollOffsetController();
+    _itemPositionsListener = ItemPositionsListener.create()
+      ..itemPositions.addListener(() {
+        final positions = _itemPositionsListener?.itemPositions.value;
+        final firstVisibleItem = positions
+            ?.where((ItemPosition position) => position.itemLeadingEdge >= 0)
+            .reduce((ItemPosition min, ItemPosition position) =>
+                position.itemLeadingEdge < min.itemLeadingEdge
+                    ? position
+                    : min);
+        print('First visible item index: ${firstVisibleItem?.index}');
+        lastStayVerseIndex = firstVisibleItem?.index ?? 0;
+      });
+    _scrollOffsetListener = ScrollOffsetListener.create();
+  }
+
+  /// 리스트 이동
+  void _scrollToPosition(int index) {
+    _itemScrollController?.scrollTo(
+      index: index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
   /// 성경 구절 변경
-  void _changeVersePage({required bool isPrevious}) {
-    // TODO: 이전 다음 성경 구절 변경 필요
+  void _changeVersePage({required bool isPrevious}) async {
+    final Completer changeVerseEventCompleter = Completer<void>();
     if (isPrevious) {
       /// 이전
+      context.read<BibleBloc>().add(
+            PreviousBiblePageEvent(changeVerseEventCompleter),
+          );
     } else {
       /// 다음
+      context.read<BibleBloc>().add(
+            NextBiblePageEvent(changeVerseEventCompleter),
+          );
     }
+    await changeVerseEventCompleter.future;
 
-    Navigator.of(context).pushReplacement(
-      TurnPageRoute(
-        overleafColor: Colors.grey,
-        animationTransitionPoint: 0.5,
-        transitionDuration: const Duration(milliseconds: 300),
-        reverseTransitionDuration: const Duration(milliseconds: 300),
-        builder: (context) => const BibleResultScreen(),
-      ),
-    );
+    if (mounted) {
+      Navigator.of(context).pushReplacement(
+        TurnPageRoute(
+          overleafColor: Colors.grey,
+          animationTransitionPoint: 0.5,
+          transitionDuration: const Duration(milliseconds: 300),
+          reverseTransitionDuration: const Duration(milliseconds: 300),
+          builder: (context) => const BibleResultScreen(),
+        ),
+      );
+    }
   }
 
   /// 확대 축소
@@ -129,7 +189,7 @@ class _BibleResultScreenState extends State<BibleResultScreen> {
       height: double.infinity,
       child: ColorFiltered(
         colorFilter: ColorFilter.mode(
-          Colors.black.withOpacity(0.4),
+          Colors.black.withOpacity(0.3),
           BlendMode.dstATop,
         ),
         child: Image.asset(
@@ -149,30 +209,17 @@ class _BibleResultScreenState extends State<BibleResultScreen> {
         children: [
           /// top appbar
           bgTransParentsAppbar(
-              onTapBackCallback: () {
-                Navigator.of(context).pop();
-              },
-              padding: const EdgeInsets.only(
-                top: 60.0,
-                left: 15.0,
-                right: 15.0,
-                bottom: 20.0,
-              )),
-
-          /// title
-          Padding(
+            onTapBackCallback: () {
+              Navigator.of(context).pop();
+            },
             padding: const EdgeInsets.only(
-              left: 45.0,
-              right: 45.0,
+              top: 60.0,
+              left: 15.0,
+              right: 15.0,
+              bottom: 20.0,
             ),
-            child: Text(
-              "${bibleItemList![categoryIndex].name}  ${chapterIndex + 1} : ${verseIndex + 1}",
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            title:
+                "${bibleItemList![categoryIndex].name} ${chapterIndex + 1} 장",
           ),
 
           /// bible verse
@@ -183,28 +230,58 @@ class _BibleResultScreenState extends State<BibleResultScreen> {
                 left: 10.0,
                 right: 10.0,
               ),
-              child: Scrollbar(
-                thumbVisibility: true,
-                thickness: 10.0,
-                radius: const Radius.circular(10.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 35.0,
-                    right: 35.0,
-                    bottom: 65.0,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Text(
-                      bibleItemList![categoryIndex].chapters[chapterIndex]
-                          [verseIndex],
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: bibleVerseFontSize,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 20.0,
+                  left: 35.0,
+                  right: 35.0,
+                  bottom: 65.0,
+                ),
+                child: ScrollablePositionedList.separated(
+                  initialScrollIndex: verseIndex,
+                  itemScrollController: _itemScrollController,
+                  scrollOffsetController: _scrollOffsetController,
+                  itemPositionsListener: _itemPositionsListener,
+                  scrollOffsetListener: _scrollOffsetListener,
+                  itemCount: bibleItemList![categoryIndex]
+                      .chapters[chapterIndex]
+                      .length,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${index + 1}.',
+                          style: TextStyle(
+                            fontSize: bibleVerseFontSize,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Text(
+                              bibleItemList![categoryIndex]
+                                  .chapters[chapterIndex][index],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: bibleVerseFontSize,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      color: Colors.black,
+                      thickness: 1.0,
+                    );
+                  },
                 ),
               ),
             ),
@@ -235,7 +312,9 @@ class _BibleResultScreenState extends State<BibleResultScreen> {
             _zoomInOutButton(onTap: onTapZoomInOutCallback),
             Padding(
                 padding: const EdgeInsets.only(top: 30.0),
-                child: _pageNavigatorButton(onTap: onTapPageNavigatorCallback)),
+                child: _pageNavigatorButton(
+                  onTap: onTapPageNavigatorCallback,
+                )),
           ],
         ),
       ),
@@ -298,33 +377,51 @@ class _BibleResultScreenState extends State<BibleResultScreen> {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
-          onPressed: () => onTap(isPrevious: true),
-          icon: ColorFiltered(
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(buttonOpacity),
-              BlendMode.srcIn,
-            ),
-            child: const Icon(
-              Icons.arrow_circle_left,
-              size: pageNavigatorButtonSize,
+        _pageNavigatorBtnIcon(
+          isShow: !isFirstBiblePage,
+          iconButton: IconButton(
+            onPressed: () => onTap(isPrevious: true),
+            icon: ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(buttonOpacity),
+                BlendMode.srcIn,
+              ),
+              child: const Icon(
+                Icons.arrow_circle_left,
+                size: pageNavigatorButtonSize,
+              ),
             ),
           ),
         ),
-        IconButton(
-          onPressed: () => onTap(isPrevious: false),
-          icon: ColorFiltered(
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(buttonOpacity),
-              BlendMode.srcIn,
-            ),
-            child: const Icon(
-              Icons.arrow_circle_right,
-              size: pageNavigatorButtonSize,
+        _pageNavigatorBtnIcon(
+          isShow: !isLastBiblePage,
+          iconButton: IconButton(
+            onPressed: () => onTap(isPrevious: false),
+            icon: ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(buttonOpacity),
+                BlendMode.srcIn,
+              ),
+              child: const Icon(
+                Icons.arrow_circle_right,
+                size: pageNavigatorButtonSize,
+              ),
             ),
           ),
         ),
       ],
     );
+  }
+
+  /// 성경 구절 이동 버튼 아이콘
+  Widget _pageNavigatorBtnIcon({
+    required bool isShow,
+    required Widget iconButton,
+  }) {
+    if (isShow) {
+      return iconButton;
+    } else {
+      return Container();
+    }
   }
 }
