@@ -25,3 +25,11 @@
 - 핵심 비즈니스 로직.
 #### ▶️ Data Layer
 - 필요한 Data를 조회 관리하는 계층.
+
+## 👉 DI
+Clean Architecture의 계층별 의존성을 위한 작업 필요 
+get_it, injectable 패키지를 활용하여 진행
+
+- 📘 [pub.dev - get_it](https://pub.dev/packages/get_it)
+- 📘 [pub.dev - injectable](https://pub.dev/packages/injectable)
+
