@@ -28,8 +28,14 @@
 
 ## 👉 DI
 Clean Architecture의 계층별 의존성을 위한 작업 필요 
-get_it, injectable 패키지를 활용하여 진행
+get_it, injectable 패키지를 활용하여 진행.
 
 - 📘 [pub.dev - get_it](https://pub.dev/packages/get_it)
 - 📘 [pub.dev - injectable](https://pub.dev/packages/injectable)
 
+## 👉 상태관리
+MVVM 디자인 패턴에서의 ViewModel과 비슷한 역할을 Bloc를 통하여 가능하다고 생각합니다.
+flutter_bloc, bloc 패키지를 활용하여 진행.
+
+- 📘 [pub.dev - flutter_bloc](https://pub.dev/packages/flutter_bloc)
+- 📘 [pub.dev - bloc](https://pub.dev/packages/bloc)
