@@ -46,57 +46,30 @@ class DefaultFirebaseOptions {
     }
   }
 
-  // static const FirebaseOptions web = FirebaseOptions(
-  //   apiKey: '',
-  //   appId: ':::',
-  //   messagingSenderId: '',
-  //   projectId: '--',
-  //   authDomain: '--..com',
-  //   storageBucket: '--..app',
-  //   measurementId: '-',
-  // );
-
-  // static const FirebaseOptions android = FirebaseOptions(
-  //   apiKey: '',
-  //   appId: ':::',
-  //   messagingSenderId: '',
-  //   projectId: '--',
-  //   storageBucket: '--..',
-  // );
-
-  // static const FirebaseOptions ios = FirebaseOptions(
-  //   apiKey: '--',
-  //   appId: ':::',
-  //   messagingSenderId: '',
-  //   projectId: '--',
-  //   storageBucket: '--..',
-  //   iosBundleId: '...',
-  // );
-
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBat6Za9mIhj7bXh4YekQ67RzLZeEzaQ48',
-    appId: '1:949910384505:web:da23dffd5def04250249a8',
-    messagingSenderId: '949910384505',
-    projectId: 'scmc-chruch-project',
-    authDomain: 'scmc-chruch-project.firebaseapp.com',
-    storageBucket: 'scmc-chruch-project.firebasestorage.app',
-    measurementId: 'G-3ZVGB4HBGY',
+    apiKey: '',
+    appId: ':::',
+    messagingSenderId: '',
+    projectId: '--',
+    authDomain: '--..com',
+    storageBucket: '--..app',
+    measurementId: '-',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyA6_Zg7HUQwQgraBTlQ3inKyBYiSaPQMNY',
-    appId: '1:949910384505:android:ba6d1973d127cb720249a8',
-    messagingSenderId: '949910384505',
-    projectId: 'scmc-chruch-project',
-    storageBucket: 'scmc-chruch-project.firebasestorage.app',
+    apiKey: '',
+    appId: ':::',
+    messagingSenderId: '',
+    projectId: '--',
+    storageBucket: '--..',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAqo4NblRgIF76yEL-v6pHA-LpDhgphQM8',
-    appId: '1:949910384505:ios:c0c3598ca7de8a430249a8',
-    messagingSenderId: '949910384505',
-    projectId: 'scmc-chruch-project',
-    storageBucket: 'scmc-chruch-project.firebasestorage.app',
-    iosBundleId: 'com.church.scmc.scmcChurchProject',
+    apiKey: '--',
+    appId: ':::',
+    messagingSenderId: '',
+    projectId: '--',
+    storageBucket: '--..',
+    iosBundleId: '...',
   );
 }
