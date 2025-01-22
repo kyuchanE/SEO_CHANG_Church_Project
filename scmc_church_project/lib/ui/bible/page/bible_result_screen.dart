@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scmc_church_project/core/resources/config.dart';
+import 'package:scmc_church_project/core/utils/utils_extension.dart';
 import 'package:scmc_church_project/domain/models/bible_chapter_data.dart';
 import 'package:scmc_church_project/ui/bible/bloc/bible_bloc.dart';
 import 'package:scmc_church_project/ui/bible/bloc/bible_event.dart';
@@ -64,7 +65,7 @@ class _BibleResultScreenState extends State<BibleResultScreen> {
         verseIndex = int.parse(chapterVerse[1]);
       } catch (e) {}
 
-      bgAssets = bibleItemList![categoryIndex].bgAssets;
+      bgAssets = bibleItemList![categoryIndex].abbreviation.bibleItemAssets();
 
       _initScrollController();
     }

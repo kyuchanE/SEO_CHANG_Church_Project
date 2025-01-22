@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:scmc_church_project/core/resources/config.dart';
+import 'package:scmc_church_project/core/utils/utils_extension.dart';
 import 'package:scmc_church_project/domain/models/bible_chapter_data.dart';
 import 'package:scmc_church_project/ui/bible/bloc/bible_state.dart';
+import 'package:scmc_church_project/ui/bible/page/bible_result_screen.dart';
 import 'package:scmc_church_project/ui/common/common_ui_config.dart';
 
 typedef OnTapBibleCategoryCallback = void Function(String abbrev);
@@ -96,7 +98,7 @@ Widget _bibleCategoryGrideList({
       return _bibleGrideItem(
         abbrev: testamentList[index].abbreviation,
         name: testamentList[index].name,
-        bgAssets: testamentList[index].bgAssets,
+        bgAssets: testamentList[index].abbreviation.bibleItemAssets(),
         onTapCallback: onTapCallback,
       );
     },

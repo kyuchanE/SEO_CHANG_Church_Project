@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scmc_church_project/core/resources/config.dart';
+import 'package:scmc_church_project/core/utils/utils_extension.dart';
 import 'package:scmc_church_project/ui/bible/bloc/bible_bloc.dart';
 import 'package:scmc_church_project/ui/bible/page/bible_result_screen.dart';
 import 'package:scmc_church_project/ui/bible/widget/bible_chapter_body_widget.dart';
@@ -119,8 +120,10 @@ class _SelectBibleChapterScreenState extends State<SelectBibleChapterScreen> {
               Stack(
                 children: [
                   _topBgContainer(
-                    bgAssets:
-                        selectedBibleChapter?.bgAssets ?? biblePlaceHolder,
+                    bgAssets: (selectedBibleChapter == null
+                            ? ''
+                            : selectedBibleChapter!.abbreviation)
+                        .bibleItemAssets(),
                     title: selectedBibleChapter?.name ?? "",
                     summary: selectedBibleChapter?.summary ?? "",
                   ),
