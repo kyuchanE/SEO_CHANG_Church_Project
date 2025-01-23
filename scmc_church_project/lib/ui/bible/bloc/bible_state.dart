@@ -18,7 +18,7 @@ class BibleState {
   final BibleStatus status;
   final BiblePage page;
   final String? abbrev; // 성경 약자
-  final int? chapter; // 장 Index
+  final int? chapter; //성경 Index
   final String? verse; // 장:절 ex) 1:1
   final List<BibleChapterData>? newTestamentList; // 신약 성경 데이터
   final List<BibleChapterData>? oldTestamentList; // 구약 성경 데이터
@@ -26,6 +26,8 @@ class BibleState {
   final String? errorMessage; // 에러 메시지
   final bool isFirstBiblePage; // 성경 처음 페이지 여부
   final bool isLastBiblePage; // 성경 마지막 페이지 여부
+  final List<String>? bookMarkList; // 북마크 리스트
+  final bool isBookmark; // 북마크 UI 여부
 
   BibleState({
     this.status = BibleStatus.loading,
@@ -39,6 +41,8 @@ class BibleState {
     this.errorMessage,
     this.isFirstBiblePage = false,
     this.isLastBiblePage = false,
+    this.bookMarkList,
+    this.isBookmark = false,
   });
 
   BibleState copyWith({
@@ -53,6 +57,8 @@ class BibleState {
     String? errorMessage,
     bool? isFirstPage,
     bool? isLastPage,
+    List<String>? bookMarkList,
+    bool? isBookmark,
   }) {
     return BibleState(
       status: status ?? this.status,
@@ -66,6 +72,8 @@ class BibleState {
       errorMessage: errorMessage ?? this.errorMessage,
       isFirstBiblePage: isFirstPage ?? this.isFirstBiblePage,
       isLastBiblePage: isLastPage ?? this.isLastBiblePage,
+      bookMarkList: bookMarkList ?? this.bookMarkList,
+      isBookmark: isBookmark ?? this.isBookmark,
     );
   }
 }

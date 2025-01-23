@@ -19,6 +19,7 @@ import '../domain/repository/bible_chapter_repository.dart' as _i195;
 import '../domain/repository/version_repository.dart' as _i77;
 import '../domain/usecase/bible_info_usecase.dart' as _i293;
 import '../domain/usecase/version_info_usecase.dart' as _i245;
+import '../preferences/app_preferences.dart' as _i597;
 import '../ui/bible/bloc/bible_bloc.dart' as _i519;
 import '../ui/splash/bloc/splash_init_bloc.dart' as _i320;
 
@@ -43,7 +44,9 @@ _i174.GetIt $initGetIt(
       () => _i320.SplashInitBloc(gh<_i245.VersionInfoUsecase>()));
   gh.factory<_i293.BibleInfoUsecase>(
       () => _i293.BibleInfoUsecase(gh<_i195.BibleChapterRepository>()));
-  gh.factory<_i519.BibleBloc>(
-      () => _i519.BibleBloc(gh<_i293.BibleInfoUsecase>()));
+  gh.factory<_i519.BibleBloc>(() => _i519.BibleBloc(
+        gh<_i293.BibleInfoUsecase>(),
+        gh<_i597.AppPreferences>(),
+      ));
   return getIt;
 }

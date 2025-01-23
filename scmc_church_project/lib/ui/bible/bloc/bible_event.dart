@@ -35,6 +35,15 @@ class ChangeBibleVerseEvent extends BibleEvent {
   ChangeBibleVerseEvent(this.verse, this.completer);
 }
 
+/// 성경 구약/신약, 구절 선택 이벤트
+class ChangeBibleAbbrevVerseEvent extends BibleEvent {
+  final String abbrev;
+  final String verse;
+  final Completer<void> completer;
+
+  ChangeBibleAbbrevVerseEvent(this.abbrev, this.verse, this.completer);
+}
+
 /// 성경 결과 페이지 하단 이전 버튼 이벤트
 class PreviousBiblePageEvent extends BibleEvent {
   final Completer<void> completer;
@@ -51,3 +60,18 @@ class NextBiblePageEvent extends BibleEvent {
 
 /// 성경 json 데이터 조회 이벤트
 class InitFetchBibleDataEvent extends BibleEvent {}
+
+/// 북마크 클릭 이벤트
+class BookmarkEvent extends BibleEvent {
+  final String bookMarkItem;
+  final Completer<void> completer;
+
+  BookmarkEvent(this.bookMarkItem, this.completer);
+}
+
+/// 북마크 UI 이벤트
+class BookmarkVisibleEvent extends BibleEvent {
+  final String targetBookmark;
+
+  BookmarkVisibleEvent(this.targetBookmark);
+}

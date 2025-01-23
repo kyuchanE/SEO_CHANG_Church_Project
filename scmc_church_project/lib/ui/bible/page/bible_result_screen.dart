@@ -91,17 +91,27 @@ class _BibleResultScreenState extends State<BibleResultScreen> {
                     : min);
         print('First visible item index: ${firstVisibleItem?.index}');
         lastStayVerseIndex = firstVisibleItem?.index ?? 0;
+        _refreshBookmarkUi();
       });
     _scrollOffsetListener = ScrollOffsetListener.create();
   }
 
-  /// 리스트 이동
-  void _scrollToPosition(int index) {
-    _itemScrollController?.scrollTo(
-      index: index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+  /// 북마크 클릭
+  void _onTabBibleBookmark() {
+    final String bookMarkItem =
+        '${bibleItemList![categoryIndex].abbreviation}/$chapterIndex:$lastStayVerseIndex';
+    final Completer bookmarkEventCompleter = Completer<void>();
+    context.read<BibleBloc>().add(
+          BookmarkEvent(bookMarkItem, bookmarkEventCompleter),
+        );
+  }
+
+  /// 북마크 UI 갱신
+  void _refreshBookmarkUi() {
+    context.read<BibleBloc>().add(
+          BookmarkVisibleEvent(
+              '${bibleItemList![categoryIndex].abbreviation}/$chapterIndex:$lastStayVerseIndex'),
+        );
   }
 
   /// 성경 구절 변경
@@ -163,7 +173,9 @@ class _BibleResultScreenState extends State<BibleResultScreen> {
                 _backgroundImageContainer(),
 
                 /// bible contents
-                _bibleVerseBody(),
+                _bibleVerseBody(
+                  isBookmark: state.isBookmark,
+                ),
 
                 /// page navigator button
                 _floatingBtnContainer(
@@ -202,17 +214,20 @@ class _BibleResultScreenState extends State<BibleResultScreen> {
   }
 
   /// 선탠된 성경 구절
-  Widget _bibleVerseBody() {
+  Widget _bibleVerseBody({
+    required bool isBookmark,
+  }) {
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
       child: Column(
         children: [
           /// top appbar
-          bgTransParentsAppbar(
+          bgTransParentsActionIconAppbar(
             onTapBackCallback: () {
               Navigator.of(context).pop();
             },
+            onTabAppbarActionCallback: () => _onTabBibleBookmark(),
             padding: const EdgeInsets.only(
               top: 60.0,
               left: 15.0,
@@ -221,6 +236,7 @@ class _BibleResultScreenState extends State<BibleResultScreen> {
             ),
             title:
                 "${bibleItemList![categoryIndex].name} ${chapterIndex + 1} 장",
+            actionIcon: isBookmark ? Icons.bookmark : Icons.bookmark_border,
           ),
 
           /// bible verse

@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scmc_church_project/core/utils/utils_extension.dart';
 import 'package:scmc_church_project/ui/bible/bloc/bible_bloc.dart';
 import 'package:scmc_church_project/ui/bible/bloc/bible_state.dart';
+import 'package:scmc_church_project/ui/bible/page/bible_result_screen.dart';
 import 'package:scmc_church_project/ui/bible/page/select_bible_chapter_screen.dart';
 import 'package:scmc_church_project/ui/bible/widget/bible_category_body_widget.dart';
 import 'package:scmc_church_project/ui/common/widget/bible_loading_widget.dart';
@@ -27,7 +29,7 @@ class _SelectBibleCategoryScreenState extends State<SelectBibleCategoryScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -55,6 +57,26 @@ class _SelectBibleCategoryScreenState extends State<SelectBibleCategoryScreen>
     }
   }
 
+  /// 북마크 선택 이벤트
+  void _onTabBibleBookmakrCard({required String bookmarkItem}) async {
+    final bibleBookmarkEventCompleter = Completer<void>();
+    context.read<BibleBloc>().add(
+          ChangeBibleAbbrevVerseEvent(
+            bookmarkItem.getBookmarkAbbrev(),
+            bookmarkItem.getBookmarkVerse(),
+            bibleBookmarkEventCompleter,
+          ),
+        );
+    await bibleBookmarkEventCompleter.future;
+    if (mounted) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const BibleResultScreen(),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BibleBloc, BibleState>(
@@ -77,8 +99,10 @@ class _SelectBibleCategoryScreenState extends State<SelectBibleCategoryScreen>
                 bibleCategoryBody(
                   state: state,
                   tabController: _tabController,
-                  onTapCallback: (abbrev) =>
+                  onTapBibleCategoryCallback: (abbrev) =>
                       _onTabBibleAbbrevCard(abbrev: abbrev),
+                  onTabBibleBookmarkCallback: (bookmarkItem) =>
+                      _onTabBibleBookmakrCard(bookmarkItem: bookmarkItem),
                 ),
                 isShowBibleLoading(
                     isLoading: state.status == BibleStatus.loading),

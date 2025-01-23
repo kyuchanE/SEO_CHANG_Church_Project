@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:scmc_church_project/domain/models/bible_chapter_data.dart';
+import 'package:scmc_church_project/preferences/app_preferences.dart';
 import 'package:scmc_church_project/ui/bible/bloc/bible_event.dart';
 import 'package:scmc_church_project/ui/bible/bloc/bible_state.dart';
 import 'package:scmc_church_project/domain/usecase/bible_info_usecase.dart';
@@ -10,9 +11,11 @@ import 'package:scmc_church_project/ui/bible/models/bible_item_data.dart';
 @injectable
 class BibleBloc extends Bloc<BibleEvent, BibleState> {
   final BibleInfoUsecase _bibleInfoUsecase;
+  final AppPreferences _appPreferences;
 
   BibleBloc(
     this._bibleInfoUsecase,
+    this._appPreferences,
   ) : super(BibleState(page: BiblePage.bibleCategory)) {
     // TODO: 사용 안하는 이벤트 제거할까?
     on<ChangeBiblePageEvent>((event, emit) async {
@@ -28,6 +31,12 @@ class BibleBloc extends Bloc<BibleEvent, BibleState> {
     /// 성경 구절 선택 이벤트 (장:절)
     on<ChangeBibleVerseEvent>((event, emit) async {
       await _changeBibleVerseEvent(event, emit, state.copyWith());
+      event.completer.complete();
+    });
+
+    /// 성경 구약/신약 , 구절 선택 이벤트
+    on<ChangeBibleAbbrevVerseEvent>((event, emit) async {
+      await _changeBibleAbbrevVerseEvent(event, emit, state.copyWith());
       event.completer.complete();
     });
 
@@ -48,6 +57,77 @@ class BibleBloc extends Bloc<BibleEvent, BibleState> {
       await _nextBibleVerseEvent(event, emit, state.copyWith());
       event.completer.complete();
     });
+
+    /// 북마크 클릭 이벤트
+    on<BookmarkEvent>((event, emit) async {
+      await _changeBookmark(event, emit, state.copyWith());
+      event.completer.complete();
+    });
+
+    /// 북마크 UI 이벤트
+    on<BookmarkVisibleEvent>((event, emit) {
+      _changeBookmarkUi(event, emit, state.copyWith());
+    });
+  }
+
+  Future _changeBookmarkUi(
+    BookmarkVisibleEvent event,
+    Emitter<BibleState> emit,
+    BibleState state,
+  ) async {
+    bool isVisibleBookmakr = state.bookMarkList == null
+        ? false
+        : state.bookMarkList!.contains(event.targetBookmark);
+
+    emit(
+      BibleState(
+        status: state.status,
+        page: state.page,
+        abbrev: state.abbrev,
+        chapter: state.chapter,
+        verse: state.verse,
+        newTestamentList: state.newTestamentList,
+        oldTestamentList: state.oldTestamentList,
+        allTestamentList: state.allTestamentList,
+        isFirstBiblePage: state.isFirstBiblePage,
+        isLastBiblePage: state.isLastBiblePage,
+        bookMarkList: state.bookMarkList,
+        isBookmark: isVisibleBookmakr,
+      ),
+    );
+  }
+
+  /// 북마크 추가/제거
+  Future _changeBookmark(
+    BookmarkEvent event,
+    Emitter<BibleState> emit,
+    BibleState state,
+  ) async {
+    if (event.bookMarkItem.contains("/") && event.bookMarkItem.contains(":")) {
+      List<String> bookMarkList = state.bookMarkList ?? [];
+      if (bookMarkList.contains(event.bookMarkItem)) {
+        bookMarkList.remove(event.bookMarkItem);
+      } else {
+        bookMarkList.add(event.bookMarkItem);
+      }
+      await _appPreferences.setBookMark(bookMarkList);
+      emit(
+        BibleState(
+          status: state.status,
+          page: state.page,
+          abbrev: state.abbrev,
+          chapter: state.chapter,
+          verse: state.verse,
+          newTestamentList: state.newTestamentList,
+          oldTestamentList: state.oldTestamentList,
+          allTestamentList: state.allTestamentList,
+          isFirstBiblePage: state.isFirstBiblePage,
+          isLastBiblePage: state.isLastBiblePage,
+          bookMarkList: bookMarkList,
+          isBookmark: state.isBookmark,
+        ),
+      );
+    } else {}
   }
 
   /// 성경 페이지 변경
@@ -67,7 +147,32 @@ class BibleBloc extends Bloc<BibleEvent, BibleState> {
       allTestamentList: state.allTestamentList,
       isFirstBiblePage: false,
       isLastBiblePage: false,
+      bookMarkList: state.bookMarkList,
+      isBookmark: state.isBookmark,
     ));
+  }
+
+  /// 성경 카테고리 구절 변경
+  Future _changeBibleAbbrevVerseEvent(
+    ChangeBibleAbbrevVerseEvent event,
+    Emitter<BibleState> emit,
+    BibleState state,
+  ) async {
+    emit(
+      BibleState(
+        status: state.status,
+        page: state.page,
+        abbrev: event.abbrev,
+        verse: event.verse,
+        newTestamentList: state.newTestamentList,
+        oldTestamentList: state.oldTestamentList,
+        allTestamentList: state.allTestamentList,
+        isFirstBiblePage: false,
+        isLastBiblePage: false,
+        bookMarkList: state.bookMarkList,
+        isBookmark: state.isBookmark,
+      ),
+    );
   }
 
   /// 성경 카테고리 변경
@@ -87,6 +192,8 @@ class BibleBloc extends Bloc<BibleEvent, BibleState> {
         allTestamentList: state.allTestamentList,
         isFirstBiblePage: false,
         isLastBiblePage: false,
+        bookMarkList: state.bookMarkList,
+        isBookmark: state.isBookmark,
       ),
     );
   }
@@ -117,6 +224,8 @@ class BibleBloc extends Bloc<BibleEvent, BibleState> {
               verse: event.verse,
             ) ??
             false,
+        bookMarkList: state.bookMarkList,
+        isBookmark: state.isBookmark,
       ),
     );
   }
@@ -145,6 +254,8 @@ class BibleBloc extends Bloc<BibleEvent, BibleState> {
           allTestamentList: state.allTestamentList,
           isFirstBiblePage: previousBibleVerse.isFirstBiblePage,
           isLastBiblePage: previousBibleVerse.isLastBiblePage,
+          bookMarkList: state.bookMarkList,
+          isBookmark: state.isBookmark,
         ),
       );
     }
@@ -174,6 +285,8 @@ class BibleBloc extends Bloc<BibleEvent, BibleState> {
           allTestamentList: state.allTestamentList,
           isFirstBiblePage: nextBibleVerse.isFirstBiblePage,
           isLastBiblePage: nextBibleVerse.isLastBiblePage,
+          bookMarkList: state.bookMarkList,
+          isBookmark: state.isBookmark,
         ),
       );
     }
@@ -184,6 +297,7 @@ class BibleBloc extends Bloc<BibleEvent, BibleState> {
     Emitter<BibleState> emit,
     BibleState state,
   ) async {
+    List<String>? bookMarkList = _appPreferences.bookMark;
     var result = await _bibleInfoUsecase.execute(null);
     result.fold(
       (error) {
@@ -217,6 +331,8 @@ class BibleBloc extends Bloc<BibleEvent, BibleState> {
             oldTestamentList: oldTestamentList,
             allTestamentList: data,
             errorMessage: data == null ? "성경 데이터 조회 실패" : null,
+            bookMarkList: bookMarkList,
+            isBookmark: state.isBookmark,
           ),
         );
       },
