@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scmc_church_project/ui/bible/page/select_bible_category_screen.dart';
+import 'package:scmc_church_project/ui/main/widget/bottom_navigation_item_widget.dart';
+import 'package:scmc_church_project/ui/main/widget/navigation_item_home_widget.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -9,26 +11,92 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  late List<Widget> _mainBottomNavItems;
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      initMainBottomNavItems(_selectedIndex);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    initMainBottomNavItems(_selectedIndex);
+  }
+
+  /// 메인 바텀 네비게이션 아이템 초기화
+  void initMainBottomNavItems(int selectedIndex) {
+    _mainBottomNavItems = [
+      Flexible(
+        flex: 1,
+        child: mainBottomNavigationItem(
+          iconData: _selectedIndex == 0 ? Icons.home : Icons.home_outlined,
+          onClick: () {
+            _onItemTapped(0);
+          },
+          label: "홈",
+          isSelected: _selectedIndex == 0,
+        ),
+      ),
+      Flexible(
+        flex: 1,
+        child: mainBottomNavigationItem(
+          iconData: Icons.search,
+          onClick: () {
+            _onItemTapped(1);
+          },
+          label: "검색",
+          isSelected: _selectedIndex == 1,
+        ),
+      ),
+      Flexible(flex: 1, child: Container()),
+      Flexible(
+        flex: 1,
+        child: mainBottomNavigationItem(
+          iconData: Icons.print,
+          onClick: () {
+            _onItemTapped(3);
+          },
+          label: "인쇄",
+          isSelected: _selectedIndex == 3,
+        ),
+      ),
+      Flexible(
+        flex: 1,
+        child: mainBottomNavigationItem(
+          iconData: Icons.people,
+          onClick: () {
+            _onItemTapped(4);
+          },
+          label: "인물",
+          isSelected: _selectedIndex == 4,
+        ),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Container(
-          color: Colors.amberAccent,
-          child: Text("Main Screen!!!"),
-        ),
+        child: mainBody(),
       ),
       extendBody: true,
       floatingActionButton: SizedBox(
         width: 75,
         height: 75,
         child: FloatingActionButton(
+          /// 성경 찾기 FAB
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => SelectBibleCategoryScreen()));
           },
-          child: Icon(Icons.book),
-          shape: CircleBorder(),
+          shape: const CircleBorder(),
+          child: const Icon(Icons.book),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -41,38 +109,38 @@ class _MainScreenState extends State<MainScreen> {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-              icon: const Icon(
-                Icons.menu,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.print,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.people,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
-          ],
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: _mainBottomNavItems,
         ),
       ),
     );
+  }
+
+  /// 메인 위젯
+  Widget mainBody() {
+    switch (_selectedIndex) {
+      case 0:
+        return navItemHomeWidget();
+      case 1:
+        return Container(
+          color: Colors.amberAccent,
+          child: Text("Search Screen!!!"),
+        );
+      case 3:
+        return Container(
+          color: Colors.amberAccent,
+          child: Text("Print Screen!!!"),
+        );
+      case 4:
+        return Container(
+          color: Colors.amberAccent,
+          child: Text("People Screen!!!"),
+        );
+      default:
+        return Container(
+          color: Colors.amberAccent,
+          child: Text("Main Screen!!!"),
+        );
+    }
   }
 }
