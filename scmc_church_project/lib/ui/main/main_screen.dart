@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scmc_church_project/domain/models/main_item_data.dart';
 import 'package:scmc_church_project/ui/bible/page/select_bible_category_screen.dart';
+import 'package:scmc_church_project/ui/detail/main_carousel_detail_screen.dart';
 import 'package:scmc_church_project/ui/main/widget/bottom_navigation_item_widget.dart';
-import 'package:scmc_church_project/ui/main/widget/navigation_item_home_widget.dart';
+import 'package:scmc_church_project/ui/main/widget/home/navigation_item_home_widget.dart';
+import 'package:scmc_church_project/ui/splash/bloc/splash_init_bloc.dart';
+import 'package:scmc_church_project/ui/splash/bloc/splash_init_state.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -82,8 +87,14 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: mainBody(),
+      body: BlocBuilder<SplashInitBloc, SplashInitState>(
+        builder: (context, state) {
+          return Center(
+            child: mainBody(
+              mainItemData: state.mainItemData,
+            ),
+          );
+        },
       ),
       extendBody: true,
       floatingActionButton: SizedBox(
@@ -116,11 +127,27 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+// TODO: 성경 퀴즈 ??
   /// 메인 위젯
-  Widget mainBody() {
+  Widget mainBody({
+    required MainItemData? mainItemData,
+  }) {
     switch (_selectedIndex) {
       case 0:
-        return navItemHomeWidget();
+        return navItemHomeWidget(
+          mainItemData: mainItemData,
+          maxWidth: MediaQuery.of(context).size.width,
+          onTapCarouselItem: (mainCarouselData) {
+            /// 상세 페이지 이동
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => MainCarouselDetailScreen(
+                  data: mainCarouselData,
+                ),
+              ),
+            );
+          },
+        );
       case 1:
         return Container(
           color: Colors.amberAccent,

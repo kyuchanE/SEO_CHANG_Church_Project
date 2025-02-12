@@ -10,4 +10,9 @@ class RemoteFirestoreDataImpl implements RemoteFirestoreData {
   @override
   Future<QuerySnapshot<Map<String, dynamic>>> getVersion() =>
       _firestore.collection('version_check').get();
+
+  /// 메인 아이템 조회
+  @override
+  Future<QuerySnapshot<Map<String, dynamic>>> getMainCarouselItem() =>
+      _firestore.collection('main_items').get();
 }

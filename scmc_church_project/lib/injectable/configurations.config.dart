@@ -14,10 +14,13 @@ import 'package:injectable/injectable.dart' as _i526;
 import '../data/remote/remote_bible_json_data.dart' as _i541;
 import '../data/remote/remote_firestore_data.dart' as _i795;
 import '../data/repository/bible_chapter_repository_impl.dart' as _i23;
+import '../data/repository/main_item_repository_impl.dart' as _i426;
 import '../data/repository/version_repository_impl.dart' as _i228;
 import '../domain/repository/bible_chapter_repository.dart' as _i195;
+import '../domain/repository/main_item_repository.dart' as _i198;
 import '../domain/repository/version_repository.dart' as _i77;
 import '../domain/usecase/bible_info_usecase.dart' as _i293;
+import '../domain/usecase/main_item_usecase.dart' as _i541;
 import '../domain/usecase/version_info_usecase.dart' as _i245;
 import '../preferences/app_preferences.dart' as _i597;
 import '../ui/bible/bloc/bible_bloc.dart' as _i519;
@@ -36,12 +39,18 @@ _i174.GetIt $initGetIt(
   );
   gh.lazySingleton<_i77.VersionRepository>(
       () => _i228.VersionRepositoryImpl(gh<_i795.RemoteFirestoreData>()));
+  gh.lazySingleton<_i198.MainItemRepository>(
+      () => _i426.MainItemRepositoryImpl(gh<_i795.RemoteFirestoreData>()));
   gh.lazySingleton<_i195.BibleChapterRepository>(
       () => _i23.BibleChapterRepositoryImpl(gh<_i541.RemoteBibleJsonData>()));
   gh.factory<_i245.VersionInfoUsecase>(
       () => _i245.VersionInfoUsecase(gh<_i77.VersionRepository>()));
-  gh.factory<_i320.SplashInitBloc>(
-      () => _i320.SplashInitBloc(gh<_i245.VersionInfoUsecase>()));
+  gh.factory<_i541.MainItemUsecase>(
+      () => _i541.MainItemUsecase(gh<_i198.MainItemRepository>()));
+  gh.factory<_i320.SplashInitBloc>(() => _i320.SplashInitBloc(
+        gh<_i245.VersionInfoUsecase>(),
+        gh<_i541.MainItemUsecase>(),
+      ));
   gh.factory<_i293.BibleInfoUsecase>(
       () => _i293.BibleInfoUsecase(gh<_i195.BibleChapterRepository>()));
   gh.factory<_i519.BibleBloc>(() => _i519.BibleBloc(
